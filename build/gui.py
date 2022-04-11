@@ -7,8 +7,9 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Button, PhotoImage
 from tkinter import messagebox
+import socket
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
@@ -22,6 +23,21 @@ window = Tk()
 
 window.geometry("1920x1080")
 window.configure(bg="#010001")
+
+
+# -----------------------------Methods-------------------------------------------#
+def is_connected():
+    try:
+        socket.create_connection(("www.google.com", 80))
+        state = "Online"
+    except OSError:
+        state = "Offline"
+    window.config(text=state)
+    print(state)
+    window.after(1000, is_connected)
+
+
+# -----------------------------Methods-------------------------------------------#
 
 canvas = Canvas(
     window,
@@ -71,7 +87,7 @@ canvas.create_text(
     255.0,
     36.0,
     anchor="nw",
-    text="Uptime: 0h 17m 34s",
+    text="Network state: ",
     fill="#54828B",
     font=("Consolas Bold", 12 * -1)
 )
@@ -146,5 +162,7 @@ canvas.create_text(
     fill="#54828B",
     font=("Consolas Bold", 12 * -1)
 )
+
+window.wm_attributes('-fullscreen', 'True')
 window.resizable(True, True)
 window.mainloop()
